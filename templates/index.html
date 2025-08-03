@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="utf-8" />
+        <title>Prosta aplikacja Tinder</title>
+        <script>
+            let currentId = null;
+
+            async function loadProfile() {
+                const response = await fetch('/profile');
+                const data = await response.json();
+                currentId = data.id;
+                document.getElementById('name').textContent = `${data.name}, ${data.age}`;
+                document.getElementById('bio').textContent = data.bio;
+                document.getElementById('photo').src = data.image;
+            }
+
+            async function swipe(action) {
+                await fetch('/swipe', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({id: currentId, action})
+                }).then(r => r.json()).then(res => {
+                    document.getElementById('liked-count').textContent = `Polubione: ${res.liked_count}`;
+                });
+                loadProfile();
+            }
+
+            function like() { swipe('like'); }
+            function dislike() { swipe('dislike'); }
+
+            window.onload = loadProfile;
+        </script>
+    </head>
+    <body>
+        <div id="liked-count">Polubione: 0</div>
+        <div>
+            <img id="photo" src="" alt="zdjęcie" width="300" />
+            <h2 id="name"></h2>
+            <p id="bio"></p>
+            <button onclick="dislike()">Nie</button>
+            <button onclick="like()">Tak</button>
+        </div>
+    </body>
+    </html>
