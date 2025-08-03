@@ -31,3 +31,16 @@ def test_swipe_and_liked():
 
     liked = client.get('/liked').get_json()
     assert any(p['id'] == profile['id'] for p in liked)
+
+
+def test_profile_sequence_is_session_isolated():
+    client1 = app.test_client()
+    client2 = app.test_client()
+
+    first1 = client1.get('/profile').get_json()['id']
+    first2 = client2.get('/profile').get_json()['id']
+    assert first1 == first2 == 0
+
+    second1 = client1.get('/profile').get_json()['id']
+    second2 = client2.get('/profile').get_json()['id']
+    assert second1 == second2 == 1

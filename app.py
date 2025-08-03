@@ -28,17 +28,16 @@ profiles = [
     },
 ]
 
-current = 0
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/profile')
 def get_profile():
-    global current
-    profile = profiles[current % len(profiles)]
-    current += 1
+    idx = session.get("current", 0)
+    profile = profiles[idx % len(profiles)]
+    session["current"] = idx + 1
+    session.modified = True
     return jsonify(profile)
 
 
