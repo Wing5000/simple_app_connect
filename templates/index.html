@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <title>Prosta aplikacja Tinder</title>
+    <script>
+        async function loadProfile() {
+            const response = await fetch('/profile');
+            const data = await response.json();
+            document.getElementById('name').textContent = `${data.name}, ${data.age}`;
+            document.getElementById('bio').textContent = data.bio;
+            document.getElementById('photo').src = data.image;
+        }
+
+        function like() { loadProfile(); }
+        function dislike() { loadProfile(); }
+
+        window.onload = loadProfile;
+    </script>
+</head>
+<body>
+    <div>
+        <img id="photo" src="" alt="zdjęcie" width="300" />
+        <h2 id="name"></h2>
+        <p id="bio"></p>
+        <button onclick="dislike()">Nie</button>
+        <button onclick="like()">Tak</button>
+    </div>
+</body>
+</html>
