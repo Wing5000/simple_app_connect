@@ -1,0 +1,57 @@
+// npx prisma migrate dev --name init
+// DATABASE_URL z .env
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // zamień na "postgresql" w produkcji
+  url      = env("DATABASE_URL")
+}
+
+enum RequestStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum RecipientStatus {
+  QUEUED
+  SUBMITTED
+  CONFIRMED
+  FAILED
+}
+
+model AirdropRequest {
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  tokenAddress   String
+  decimals       Int
+  chunkSize      Int              @default(50)
+  network        String           @default("sepolia")
+  submittedBy    String?
+  status         RequestStatus    @default(PENDING)
+  totalRecipients Int
+  txCount        Int               @default(0)
+  error          String?
+  recipients     AirdropRecipient[]
+}
+
+model AirdropRecipient {
+  id          String          @id @default(cuid())
+  createdAt   DateTime        @default(now())
+  requestId   String
+  address     String
+  // amount w najmniejszych jednostkach (wei-like) jako string by uniknąć overflow
+  amountWei   String
+  status      RecipientStatus @default(QUEUED)
+  txHash      String?
+  error       String?
+  request     AirdropRequest  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@index([requestId])
+  @@index([status])
+  @@unique([requestId, address])
+}
