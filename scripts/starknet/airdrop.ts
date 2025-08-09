@@ -14,7 +14,7 @@ import { parseAmountHumanToWei } from '../../src/chains/starknet/u256';
     .option('out', { type: 'string', default: 'starknet_airdrop_result.csv' })
     .parseSync();
 
-  const adapter = new StarknetAdapter();
+  const adapter = new StarknetAdapter({ chainId: process.env.STARKNET_CHAIN_ID });
   const decimals = await adapter.getDecimals();
   const csv = fs.readFileSync(String(argv.csv), 'utf8');
   const rows: Array<{ address: string; amount: string }> = parse(csv, { columns: true, skip_empty_lines: true });

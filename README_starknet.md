@@ -2,7 +2,7 @@
 
 ## Setup
 1) `npm i`  
-2) `.env` uzupełnij: `STARKNET_RPC_URL`, `STARKNET_ACCOUNT_ADDRESS`, `STARKNET_PRIVATE_KEY`, `STARKNET_TOKEN_ADDRESS`.  
+2) `.env` uzupełnij: `STARKNET_RPC_URL`, `STARKNET_ACCOUNT_ADDRESS`, `STARKNET_PRIVATE_KEY`, `STARKNET_TOKEN_ADDRESS`, `STARKNET_CHAIN_ID`.
 3) (Opcjonalnie) `npm run build` lub używaj `ts-node`.
 
 ## CSV format
