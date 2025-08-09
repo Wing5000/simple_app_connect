@@ -9,7 +9,7 @@ import { StarknetAdapter } from '../../src/chains/starknet/StarknetAdapter';
     .option('human', { type: 'boolean', default: true })
     .parseSync();
 
-  const adapter = new StarknetAdapter();
+  const adapter = new StarknetAdapter({ chainId: process.env.STARKNET_CHAIN_ID });
   const bal = await adapter.getBalanceOf(String(argv.address));
   if (argv.human) {
     const d = await adapter.getDecimals();

@@ -10,20 +10,29 @@ export class StarknetAdapter {
   account: Account;
   tokenAddress: string;
 
-  constructor(cfg?: { rpcUrl?: string; accountAddress?: string; privateKey?: string; tokenAddress?: string }) {
+  constructor(cfg?: {
+    rpcUrl?: string;
+    accountAddress?: string;
+    privateKey?: string;
+    tokenAddress?: string;
+    chainId?: string;
+  }) {
     const rpcUrl = cfg?.rpcUrl ?? process.env.STARKNET_RPC_URL!;
     const accountAddress = cfg?.accountAddress ?? process.env.STARKNET_ACCOUNT_ADDRESS!;
     const privateKey = cfg?.privateKey ?? process.env.STARKNET_PRIVATE_KEY!;
     this.tokenAddress = cfg?.tokenAddress ?? process.env.STARKNET_TOKEN_ADDRESS!;
+    const chainId = cfg?.chainId ?? process.env.STARKNET_CHAIN_ID;
 
-    if (!rpcUrl || !accountAddress || !privateKey || !this.tokenAddress) {
-      throw new Error('Missing Starknet env: STARKNET_RPC_URL, STARKNET_ACCOUNT_ADDRESS, STARKNET_PRIVATE_KEY, STARKNET_TOKEN_ADDRESS');
+    if (!rpcUrl || !accountAddress || !privateKey || !this.tokenAddress || !chainId) {
+      throw new Error(
+        'Missing Starknet env: STARKNET_RPC_URL, STARKNET_ACCOUNT_ADDRESS, STARKNET_PRIVATE_KEY, STARKNET_TOKEN_ADDRESS, STARKNET_CHAIN_ID'
+      );
     }
 
-    this.provider = new RpcProvider({ nodeUrl: rpcUrl });
+    this.provider = new RpcProvider({ nodeUrl: rpcUrl, chainId: chainId as any });
     const accAddrParsed = validateAndParseAddress(accountAddress);
     this.tokenAddress = validateAndParseAddress(this.tokenAddress);
-    this.account = new Account(this.provider, accAddrParsed, privateKey);
+    this.account = new Account({ nodeUrl: rpcUrl, chainId: chainId as any }, accAddrParsed, privateKey);
   }
 
   private erc20Read(): Contract {
