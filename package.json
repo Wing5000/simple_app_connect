@@ -7,18 +7,28 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "tsc && mocha dist/tests/**/*.js"
+    "test": "tsc && mocha dist/tests/**/*.js",
+    "build": "tsc -p .",
+    "starknet:estimate": "ts-node scripts/starknet/estimate.ts",
+    "starknet:airdrop": "ts-node scripts/starknet/airdrop.ts",
+    "starknet:balance": "ts-node scripts/starknet/balance.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "dependencies": {
+    "starknet": "^6.10.0",
+    "dotenv": "^16.4.5",
+    "yargs": "^17.7.2",
+    "csv-parse": "^5.5.6"
+  },
   "devDependencies": {
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
     "chai": "^5.2.1",
     "mocha": "^11.7.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.4.5"
   }
 }
