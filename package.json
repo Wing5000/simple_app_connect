@@ -1,34 +1,32 @@
 {
-  "name": "simple_app_connect",
-  "version": "1.0.0",
-  "description": "Starknet decimal to U256 utility",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
+  "name": "wilddrop-starknet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "tsc && mocha dist/tests/**/*.js",
-    "build": "tsc -p .",
-    "starknet:estimate": "ts-node scripts/starknet/estimate.ts",
-    "starknet:airdrop": "ts-node scripts/starknet/airdrop.ts",
-    "starknet:balance": "ts-node scripts/starknet/balance.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:deploy": "prisma migrate deploy"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "starknet": "^6.10.0",
+    "@prisma/client": "^5.17.0",
+    "bullmq": "^5.7.9",
+    "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
-    "yargs": "^17.7.2",
-    "csv-parse": "^5.5.6"
+    "fastify": "^4.28.1",
+    "ioredis": "^5.4.1",
+    "pino": "^9.3.2",
+    "starknet": "^6.7.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/chai": "^5.2.2",
-    "@types/mocha": "^10.0.10",
-    "chai": "^5.2.1",
-    "mocha": "^11.7.1",
+    "@types/node": "^22.5.2",
+    "prisma": "^5.17.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.4"
   }
 }
