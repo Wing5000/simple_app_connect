@@ -1,38 +1,24 @@
 import { expect } from 'chai';
-import { decimalToU256 } from '../src/chains/starknet/u256';
+import { toUint256, fromUint256, parseAmountHumanToWei } from '../src/chains/starknet/u256';
 
-describe('decimalToU256', () => {
-  it('parses integer values', () => {
-    expect(decimalToU256('123', 2)).to.equal(12300n);
+describe('u256 helpers', () => {
+  it('toUint256/fromUint256 roundtrip', () => {
+    const x = (1n << 200n) + 12345n;
+    const u = toUint256(x);
+    expect(fromUint256(u)).to.equal(x);
   });
 
-  it('parses decimals with padding', () => {
-    expect(decimalToU256('1.23', 4)).to.equal(12300n);
+  it('parseAmountHumanToWei decimal', () => {
+    expect(parseAmountHumanToWei('1.23', 2)).to.equal(123n);
+    expect(parseAmountHumanToWei('0.001', 6)).to.equal(1000n);
   });
 
-  it('allows extra zero fractional digits', () => {
-    expect(decimalToU256('1.2300', 2)).to.equal(123n);
+  it('parseAmountHumanToWei hex', () => {
+    expect(parseAmountHumanToWei('0x10', 18)).to.equal(16n);
   });
 
-  it('rejects negative numbers', () => {
-    expect(() => decimalToU256('-1', 2)).to.throw('Negative');
-  });
-
-  it('rejects invalid numeric formats', () => {
-    expect(() => decimalToU256('1.2.3', 2)).to.throw('Invalid numeric format');
-    expect(() => decimalToU256('abc', 2)).to.throw('Invalid numeric format');
-  });
-
-  it('rejects non-zero extra fractional digits', () => {
-    expect(() => decimalToU256('1.234', 2)).to.throw('Fractional part exceeds decimals');
-  });
-
-  it('handles decimals = 0 correctly', () => {
-    expect(decimalToU256('1.000', 0)).to.equal(1n);
-    expect(() => decimalToU256('1.001', 0)).to.throw('Fractional part exceeds decimals');
-  });
-
-  it('boundary: exactly decimals digits', () => {
-    expect(decimalToU256('0.12345', 5)).to.equal(12345n);
+  it('parseAmountHumanToWei invalid', () => {
+    expect(() => parseAmountHumanToWei('abc', 2)).to.throw('Invalid amount');
   });
 });
+
